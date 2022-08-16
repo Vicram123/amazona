@@ -2,8 +2,9 @@ import express from "express";
 import data from "./data.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import seedRouter from "./routes/seedRoutes.js";
+
 import productRouter from "./routes/productRoutes.js";
+import seedRouter from "./routes/seedRoutes.js";
 
 dotenv.config();
 
