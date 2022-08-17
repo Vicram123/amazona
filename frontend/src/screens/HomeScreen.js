@@ -1,5 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
-
+import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import logger from "use-reducer-logger";
 import Row from "react-bootstrap/Row";
@@ -8,8 +7,7 @@ import Product from "../components/Product";
 import { Helmet } from "react-helmet-async";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-
-//import data from "../data";
+// import data from '../data';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -24,40 +22,36 @@ const reducer = (state, action) => {
   }
 };
 
-export default function HomeScreen() {
+function HomeScreen() {
   const [{ loading, error, products }, dispatch] = useReducer(logger(reducer), {
     products: [],
     loading: true,
     error: "",
   });
-  //const [products, setProducts] = useState([]);
-
+  // const [products, setProducts] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: "FETCH_REQUEST" });
       try {
         const result = await axios.get("/api/products");
         dispatch({ type: "FETCH_SUCCESS", payload: result.data });
-      } catch (error) {
-        dispatch({ type: "FETCH_FAIL", payload: error.message });
+      } catch (err) {
+        dispatch({ type: "FETCH_FAIL", payload: err.message });
       }
 
-      //setProducts(result.data);
+      // setProducts(result.data);
     };
     fetchData();
   }, []);
-
   return (
     <div>
       <Helmet>
-        <title>amazona</title>
+        <title>Amazona</title>
       </Helmet>
-      <h1>Featured products</h1>
+      <h1>Featured Products</h1>
       <div className="products">
         {loading ? (
-          <div>
-            <LoadingBox />
-          </div>
+          <LoadingBox />
         ) : error ? (
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
@@ -73,3 +67,4 @@ export default function HomeScreen() {
     </div>
   );
 }
+export default HomeScreen;

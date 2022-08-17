@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import Axios from "axios";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/esm/Button";
+import Button from "react-bootstrap/Button";
 import { Helmet } from "react-helmet-async";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { Store } from "../Store";
 import { toast } from "react-toastify";
 import { getError } from "../utils";
 
-const SigninScreen = () => {
+export default function SigninScreen() {
   const navigate = useNavigate();
   const { search } = useLocation();
   const redirectInUrl = new URLSearchParams(search).get("redirect");
@@ -23,7 +23,7 @@ const SigninScreen = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/api/users/signin", {
+      const { data } = await Axios.post("/api/users/signin", {
         email,
         password,
       });
@@ -68,12 +68,10 @@ const SigninScreen = () => {
           <Button type="submit">Sign In</Button>
         </div>
         <div className="mb-3">
-          New customer?{""}
+          New customer?{" "}
           <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
         </div>
       </Form>
     </Container>
   );
-};
-
-export default SigninScreen;
+}
