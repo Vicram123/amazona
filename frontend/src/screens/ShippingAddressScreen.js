@@ -4,12 +4,13 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import { Store } from "../Store";
-import CheckOutSteps from "../components/CheckOutSteps";
+import CheckoutSteps from "../components/CheckoutSteps";
 
-const ShippingAddressScreen = () => {
+export default function ShippingAddressScreen() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
+    fullBox,
     userInfo,
     cart: { shippingAddress },
   } = state;
@@ -19,18 +20,14 @@ const ShippingAddressScreen = () => {
   const [postalCode, setPostalCode] = useState(
     shippingAddress.postalCode || ""
   );
-
   useEffect(() => {
     if (!userInfo) {
       navigate("/signin?redirect=/shipping");
     }
   }, [userInfo, navigate]);
-
   const [country, setCountry] = useState(shippingAddress.country || "");
-
   const submitHandler = (e) => {
     e.preventDefault();
-
     ctxDispatch({
       type: "SAVE_SHIPPING_ADDRESS",
       payload: {
@@ -39,25 +36,38 @@ const ShippingAddressScreen = () => {
         city,
         postalCode,
         country,
+        location: shippingAddress.location,
       },
     });
     localStorage.setItem(
       "shippingAddress",
-      JSON.stringify({ fullName, address, city, postalCode, country })
+      JSON.stringify({
+        fullName,
+        address,
+        city,
+        postalCode,
+        country,
+        location: shippingAddress.location,
+      })
     );
     navigate("/payment");
   };
+
+  useEffect(() => {
+    ctxDispatch({ type: "SET_FULLBOX_OFF" });
+  }, [ctxDispatch, fullBox]);
 
   return (
     <div>
       <Helmet>
         <title>Shipping Address</title>
       </Helmet>
-      <CheckOutSteps step1 step2></CheckOutSteps>
+
+      <CheckoutSteps step1 step2></CheckoutSteps>
       <div className="container small-container">
-        <h1 classname="my-3">Shipping Address</h1>
+        <h1 className="my-3">Shipping Address</h1>
         <Form onSubmit={submitHandler}>
-          <Form.Group classname="mb-3" controlId="fullName">
+          <Form.Group className="mb-3" controlId="fullName">
             <Form.Label>Full Name</Form.Label>
             <Form.Control
               value={fullName}
@@ -65,7 +75,7 @@ const ShippingAddressScreen = () => {
               required
             />
           </Form.Group>
-          <Form.Group classname="mb-3" controlId="address">
+          <Form.Group className="mb-3" controlId="address">
             <Form.Label>Address</Form.Label>
             <Form.Control
               value={address}
@@ -98,6 +108,25 @@ const ShippingAddressScreen = () => {
             />
           </Form.Group>
           <div className="mb-3">
+            <Button
+              id="chooseOnMap"
+              type="button"
+              variant="light"
+              onClick={() => navigate("/map")}
+            >
+              Choose Location On Map
+            </Button>
+            {shippingAddress.location && shippingAddress.location.lat ? (
+              <div>
+                LAT: {shippingAddress.location.lat}
+                LNG:{shippingAddress.location.lng}
+              </div>
+            ) : (
+              <div>No location</div>
+            )}
+          </div>
+
+          <div className="mb-3">
             <Button variant="primary" type="submit">
               Continue
             </Button>
@@ -106,6 +135,4 @@ const ShippingAddressScreen = () => {
       </div>
     </div>
   );
-};
-
-export default ShippingAddressScreen;
+}
