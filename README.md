@@ -136,6 +136,7 @@
     2. fetch order api in frontend
     3. show order in formation in 2 columns
 30. Pay Order By PayPal
+
     1. generate paypal client id
     2. create api to return client id
     3. npm install @paypal/react-paypal-js
@@ -145,3 +146,8 @@
     7. render paypal button
     8. implement onApprove payment function
     9. create pay order api in backend
+
+31. Display Order History
+    1. create order screen
+    2. create order history api
+    3. use api in the frontend
